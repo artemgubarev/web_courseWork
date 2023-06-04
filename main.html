@@ -4,24 +4,20 @@
   <title>Отображение линейных графиков</title>
   <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
   <script>
+    var myChart; 
+
     function parseCSV(csvString) {
-      // Split the CSV string into rows
       var rows = csvString.split('\n');
 
-      // Initialize arrays for labels and data
       var labels = [];
       var data = [];
 
-      // Iterate over each row
       for (var i = 0; i < rows.length; i++) {
-        // Split the row into individual values
         var values = rows[i].split(',');
 
-        // Extract the label and value
         var label = values[0];
         var value = parseFloat(values[1]);
 
-        // Check if the value is a valid number
         if (!isNaN(value)) {
           labels.push(label);
           data.push(value);
@@ -37,6 +33,9 @@
       reader.onload = function(e) {
         var csvString = e.target.result;
         var parsedData = parseCSV(csvString);
+        if (myChart) {
+          myChart.destroy(); 
+        }
         displayChart(parsedData.labels, parsedData.data);
       };
 
@@ -46,7 +45,7 @@
     function displayChart(labels, data) {
       var ctx = document.getElementById('chart').getContext('2d');
 
-      new Chart(ctx, {
+      myChart = new Chart(ctx, { 
         type: 'line',
         data: {
           labels: labels,
